@@ -1,4 +1,4 @@
-ROOT=$(shell pwd)
+VERSION := 1.0.4
 
 all: json
 
@@ -9,7 +9,7 @@ build/lua-cjson/cjson.so: build/lua-cjson
 
 build/lua-cjson:
 	mkdir -p build
-	wget http://www.kyne.com.au/~mark/software/lua-cjson-1.0.4.tar.gz -O - | tar -xzpf - -C build
+	wget http://www.kyne.com.au/~mark/software/lua-cjson-$(VERSION).tar.gz -O - | tar -xzpf - -C build
 	mv build/lua-cjson-* $@
 
 .PHONY: all json
