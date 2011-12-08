@@ -1,3 +1,3 @@
-local JSON = require './build/cjson/cjson'
+local JSON = require './cjson'
 _G.cjson = nil
 return JSON

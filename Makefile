@@ -1,29 +1,39 @@
 VERSION := 1.0.4
 
-all: module
-
-module: build/cjson/cjson.luvit
-
-OS ?= $(shell uname)
-ifeq ($(OS),Darwin)
-SOEXT := dylib
-else ifeq ($(OS),Windows)
-SOEXT := dll
-else
-SOEXT := so
+ifeq ($(shell uname -sm | sed -e s,x86_64,i386,),Darwin i386)
+export CC=gcc -arch i386
+export LUA_DIR=$(LUVIT_DIR)/deps/luajit/src
+export LDFLAGS_EXTRA=-shared $(LUA_DIR)/libluajit.a
 endif
 
-build/cjson/cjson.luvit: build/cjson
-	LUA_INCLUDE_DIR=$(LUA_DIR) make -C $^
-	mv build/cjson/cjson.$(SOEXT) $@
+LUVIT_DIR?=
 
-build/cjson:
+all: json
+
+json: build/lua-cjson/cjson.so
+
+build/lua-cjson/cjson.so: build/lua-cjson
+	${MAKE} -C $^ LDFLAGS_EXTRA="${LDFLAGS_EXTRA}" LUA_INCLUDE_DIR=$(LUA_DIR)
+
+build/lua-cjson:
 	mkdir -p build
-	wget -qct3 --progress=bar http://www.kyne.com.au/~mark/software/lua-cjson-$(VERSION).tar.gz -O - | tar -xzpf - -C build
+	wget -v http://www.kyne.com.au/~mark/software/lua-cjson-$(VERSION).tar.gz -O - | tar -xzpf - -C build
 	mv build/lua-cjson-* $@
 
 clean:
-	rm -fr build
+	rm -rf build/lua-cjson/cjson.so build/lua-cjson/*.o
 
-.PHONY: all module clean
-.SILENT:
+mrproper:
+	rm -rf build
+
+at=
+install:
+ifeq ($(at),)
+	@echo Use: ${MAKE} install at=/
+	@false
+else
+	mkdir -p $(at)/cjson
+	cp cjson.luvit init.lua $(at)/cjson/
+endif
+
+.PHONY: all json clean mrproper install
