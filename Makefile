@@ -11,6 +11,8 @@ LUVIT_DIR?=
 all: json
 
 json: build/lua-cjson/cjson.so
+	mkdir -p modules/cjson
+	cp build/lua-cjson/cjson.so modules/cjson/cjson.luvit
 
 build/lua-cjson/cjson.so: build/lua-cjson
 	${MAKE} -C $^ LDFLAGS_EXTRA="${LDFLAGS_EXTRA}" LUA_INCLUDE_DIR=$(LUA_DIR)
@@ -22,6 +24,7 @@ build/lua-cjson:
 
 clean:
 	rm -rf build/lua-cjson/cjson.so build/lua-cjson/*.o
+	rm -f modules/cjson/cjson.luvit
 
 mrproper:
 	rm -rf build

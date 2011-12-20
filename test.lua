@@ -1,6 +1,6 @@
 #!/usr/bin/env luvit
 
-local JSON = require('./')
+local JSON = require('cjson')
 assert(not _G.json)
 assert(JSON.encode)
 assert(JSON.decode)
