@@ -20,7 +20,7 @@ SOEXT := so
 endif
 
 build/cjson/cjson.luvit: build/cjson
-	LUA_INCLUDE_DIR=$(ROOT)/.luvit make -C $^
+	CFLAGS=`luvit-config --cflags` make -C $^
 	mv build/cjson/cjson.$(SOEXT) $@
 
 build/cjson:
