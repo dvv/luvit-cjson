@@ -1,3 +1,8 @@
+JSON for Luvit
+=====
+
+[![Build Status](https://secure.travis-ci.org/luvit/json.png)](http://travis-ci.org/luvit/json)
+
 Usage
 -----
 
@@ -17,4 +22,4 @@ Usage
 License
 -------
 
-Check [here](license.txt).
+[MIT](json/license.txt)

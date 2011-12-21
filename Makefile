@@ -1,6 +1,12 @@
 VERSION := 1.0.4
 
+ROOT    := $(shell pwd)
+PATH    := $(ROOT)/.luvit:$(PATH)
+
 all: module
+
+test: module
+	./test
 
 module: build/cjson/cjson.luvit
 
@@ -14,7 +20,7 @@ SOEXT := so
 endif
 
 build/cjson/cjson.luvit: build/cjson
-	LUA_INCLUDE_DIR=$(LUA_DIR) make -C $^
+	LUA_INCLUDE_DIR=$(ROOT)/.luvit make -C $^
 	mv build/cjson/cjson.$(SOEXT) $@
 
 build/cjson:
