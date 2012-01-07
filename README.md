@@ -7,19 +7,19 @@ Usage
 -----
 
     // import module
-    local JSON = require('json')
+    local JSON = require('cjson')
 
     // simple encode/decode loop
     local obj, serialized, content
     obj = { 1, 2, 3, 4 }
     p(obj)
-    serialized = JSON.encode(obj)
+    serialized = JSON.stringify(obj)
     p(serialized)
-    content = JSON.decode(serialized)
+    content = JSON.parse(serialized)
     p(content)
     assert(obj[2] == content[2])
 
 License
 -------
 
-[MIT](json/license.txt)
+[MIT](cjson/license.txt)
