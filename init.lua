@@ -1,4 +1,4 @@
-local JSON = require './build/cjson/cjson'
+local JSON = require('./build/cjson/cjson')
 _G.cjson = nil
 
 return {
