@@ -1,4 +1,4 @@
-language: erlang
+language: php
 
 script:
   - "make test"
