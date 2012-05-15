@@ -24,7 +24,9 @@ content = JSON.parse(serialized)
 p(content)
 assert(obj.a[3] == content.a[3])
 
+--[[
 -- bad unicode
-local lookup = require('fs').read_file_sync('tests/lookup.txt')
+local lookup = require('fs').readFileSync('tests/lookup.txt')
 lookup = JSON.parse(lookup)
 p(lookup)
+]]

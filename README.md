@@ -1,7 +1,7 @@
 JSON for Luvit
 =====
 
-[![Build Status](https://secure.travis-ci.org/luvit/json.png)](http://travis-ci.org/luvit/json)
+[![Build Status](https://secure.travis-ci.org/dvv/luvit-cjson.png)](http://travis-ci.org/dvv/luvit-cjson)
 
 N.B.
 -----
@@ -28,4 +28,4 @@ assert(obj[2] == content[2])
 License
 -------
 
-[MIT](cjson/license.txt)
+[MIT](dvv/luvit-cjson/license.txt)

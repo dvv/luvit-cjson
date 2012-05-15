@@ -1,12 +1,15 @@
-VERSION := 1.0.4
-
 ROOT    := $(shell pwd)
-PATH    := $(ROOT)/.luvit:$(PATH)
+PATH    := $(ROOT):$(PATH)
+
+GET := $(shell which curl && echo ' -L --progress-bar')
+ifeq ($(GET),)
+GET := $(shell which wget && echo ' -qct3 --progress=bar --no-check-certificate -O -')
+endif
+ifeq ($(GET),)
+GET := curl-or-wget-is-missing
+endif
 
 all: module
-
-test: module
-	./test
 
 module: build/cjson/cjson.luvit
 
@@ -20,16 +23,22 @@ SOEXT := so
 endif
 
 build/cjson/cjson.luvit: build/cjson
-	CFLAGS=`luvit-config --cflags` make -C $^
-	mv build/cjson/cjson.$(SOEXT) $@
+	#CFLAGS="`luvit --cflags` -I../luvit/include/luvit" make -C $^
+	#mv build/cjson/cjson.$(SOEXT) $@
+	$(CC) `luvit --cflags | sed 's/ -Werror / /'` $^/lua_cjson.c $^/strbuf.c $^/fpconv.c -shared $(LDFLAGS) -o $@
 
 build/cjson:
 	mkdir -p build
-	wget -qct3 --progress=bar http://www.kyne.com.au/~mark/software/lua-cjson-$(VERSION).tar.gz -O - | tar -xzpf - -C build
-	mv build/lua-cjson-* $@
+	$(GET) https://github.com/mpx/lua-cjson/tarball/master | tar -xzpf - -C build
+	mv build/mpx-lua-cjson-* $@
 
 clean:
 	rm -fr build
 
-.PHONY: all module clean
+test: module
+	-luvit -e '' || wget -qct3 http://luvit.io/dist/latest/ubuntu-latest/$(shell uname -m)/luvit-bundled/luvit
+	-chmod a+x luvit 2>/dev/null
+	luvit test.lua
+
+.PHONY: all module clean test
 .SILENT:
