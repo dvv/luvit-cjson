@@ -24,6 +24,10 @@ content = JSON.parse(serialized)
 p(content)
 assert(obj.a[3] == content.a[3])
 
+-- multivalue
+p(JSON.parseMany('[1][2][3]'))
+p(#JSON.parseMany(('[1]'):rep(40000)))
+
 --[[
 -- bad unicode
 local lookup = require('fs').readFileSync('tests/lookup.txt')
