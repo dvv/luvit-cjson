@@ -18,6 +18,7 @@ local function streamingParser(callback, options)
       local status, result = pcall(parse, self.data)
       if status then
         callback(result)
+        self.data = nil
         return
       end
       --print(result, str)
@@ -40,6 +41,11 @@ local function streamingParser(callback, options)
         error(result)
       end
     end
+  end
+  --
+  self.complete = function(self)
+    self.data = nil
+    self.parse = nil
   end
   --
   return self
