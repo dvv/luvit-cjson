@@ -25,8 +25,21 @@ p(content)
 assert(obj.a[3] == content.a[3])
 
 -- multivalue
-p(JSON.parseMany('[1][2][3]'))
-p(#JSON.parseMany(('[1]'):rep(40000)))
+p(JSON.parse('[1][2]\n[3]\n', { allow_multiple_values = true }))
+p(#JSON.parse(('[1]\n'):rep(40000), { allow_multiple_values = true }))
+do
+  local results = {}
+  local parser = JSON.streamingParser(function(value)
+    results[#results + 1] = value
+    if #results == 30 then
+      print('OK')
+    end
+  end, { allow_multiple_values = true })
+  local status, result = pcall(parser.parse, parser, ('[2]\n'):rep(30))
+  p(status, result, #results)
+  --assert(status)
+  --assert(#result == 10000)
+end
 
 --[[
 -- bad unicode
