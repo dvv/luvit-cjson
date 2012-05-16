@@ -41,6 +41,16 @@ do
   --assert(#result == 10000)
 end
 
+-- streaming
+do
+  local results = {}
+  local parser = JSON.streamingParser(function(value)
+    p('VALUE:', value)
+  end, { allow_multiple_values = true })
+  parser:parse('[1')
+  parser:parse(']\n[2]\n[')
+end
+
 --[[
 -- bad unicode
 local lookup = require('fs').readFileSync('tests/lookup.txt')

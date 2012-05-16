@@ -11,22 +11,31 @@ local function streamingParser(callback, options)
       callback(parse(str))
       return
     end
+    -- append new data to previous data
+    self.data = (self.data or '') .. str
+    --
     while true do
-      local status, result = pcall(parse, str)
+      local status, result = pcall(parse, self.data)
       if status then
         callback(result)
         return
       end
       --print(result, str)
+      -- more data than needed for the single value?
       if result:find('Expected the end ', nil, true) == 1 then
         local at = result:find(' at character ', nil, true)
+        -- consume the first value and try retry parsing
         if at then
           at = tonumber(result:sub(at + 14))
           if at then
-            callback(parse(str:sub(1, at - 1)))
-            str = str:sub(at)
+            callback(parse(self.data:sub(1, at - 1)))
+            self.data = self.data:sub(at)
           end
         end
+      -- not enough data?
+      elseif result:find(' but found T_END at character ', nil, true) then
+        return
+      -- not streaming error
       else
         error(result)
       end
@@ -49,8 +58,10 @@ local function parseMany(str, options)
       return results
     end
     --print(result, str)
+    -- more data than needed for the single value?
     if result:find('Expected the end ', nil, true) == 1 then
       local at = result:find(' at character ', nil, true)
+      -- consume the first value and try retry parsing
       if at then
         at = tonumber(result:sub(at + 14))
         if at then
@@ -58,6 +69,7 @@ local function parseMany(str, options)
           str = str:sub(at)
         end
       end
+    -- relay other errors
     else
       error(result)
     end
